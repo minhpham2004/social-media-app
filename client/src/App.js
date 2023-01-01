@@ -1,13 +1,29 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import PageRender from './PageRender';
 import './index.css'
+import PageRender from './PageRender';
+import Home from './pages/home';
+import Login from './pages/login'
+
+import Notify from './components/notify/Notify';
+import { refreshToken } from './redux/actions/authAction';
 
 function App() {
+  const { auth } = useSelector(state => state)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // dispatch(refreshToken())
+  }, [])
+
   return (
     <Router>
+      <Notify />
       <input type="checkbox" id="theme" />
       <div className="App">
         <div className='main'>
+          <Route path="/" component={auth.token ? Home : Login} />
           <Route path='/:page' component={PageRender} />
           <Route path='/:page/:id' component={PageRender} />
         </div>
