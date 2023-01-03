@@ -6,7 +6,7 @@ import PageRender from './PageRender';
 import Home from './pages/home';
 import Login from './pages/login'
 
-import Notify from './components/notify/Notify';
+import Alert from './components/alert/Alert';
 import { refreshToken } from './redux/actions/authAction';
 
 function App() {
@@ -14,18 +14,18 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // dispatch(refreshToken())
-  }, [])
+    dispatch(refreshToken())
+  }, [dispatch])
 
   return (
     <Router>
-      <Notify />
+      <Alert />
       <input type="checkbox" id="theme" />
       <div className="App">
         <div className='main'>
-          <Route path="/" component={auth.token ? Home : Login} />
-          <Route path='/:page' component={PageRender} />
-          <Route path='/:page/:id' component={PageRender} />
+          <Route exact path="/" component={auth.token ? Home : Login} />
+          <Route exact path='/:page' component={PageRender} />
+          <Route exact path='/:page/:id' component={PageRender} />
         </div>
       </div>
     </Router>

@@ -18,7 +18,7 @@
     position: relative;
 }
 
-.auth_page form .pass small{
+.auth_page form .pass .show-pass{
     position: absolute;
     top: 50%;
     right: 5px;

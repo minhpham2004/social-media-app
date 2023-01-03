@@ -1,34 +1,35 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { GLOBALTYPES } from '../../redux/actions/globalTypes'
 import Loading from './Loading'
 import Toast from './Toast'
 
-function Notify() {
-    const { notify } = useSelector(state => state)
+function Alert() {
+    const { alert } = useSelector(state => state)
     const dispatch = useDispatch()
 
     return (
         <div>
-            {notify.loading && <Loading />}
+            {alert.loading && <Loading />}
 
-            {notify.error &&
+            {alert.error &&
                 <Toast
                     msg={{
                         title: 'Error',
-                        body: notify.error
+                        body: alert.error
                     }}
-                    handleShow={() => dispatch({type: "NOTIFY", payload: {}})}
+                    handleShow={() => dispatch({ type: GLOBALTYPES.ALERT, payload: {} })}
                     bgColor="bg-danger"
                 />
             }
 
-            {notify.success &&
+            {alert.success &&
                 <Toast
                     msg={{
                         title: 'Success',
-                        body: notify.success
+                        body: alert.success
                     }}
-                    handleShow={() => dispatch({type: "NOTIFY", payload: {}})}
+                    handleShow={() => dispatch({ type: GLOBALTYPES.ALERT, payload: {} })}
                     bgColor="bg-success"
                 />
             }
@@ -37,4 +38,4 @@ function Notify() {
     )
 }
 
-export default Notify
+export default Alert
