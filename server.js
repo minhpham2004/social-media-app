@@ -13,10 +13,12 @@ app.use(cookieParser())
 
 //Routes
 app.use('/api', require('./routes/authRouter'))
+app.use('/api', require('./routes/userRouter'))
 
 app.get('/', (req, res) => {
     res.send('Hello Social Media Server')
 })
+
 
 const URI = process.env.MONGODB_URL
 mongoose.connect(URI, {

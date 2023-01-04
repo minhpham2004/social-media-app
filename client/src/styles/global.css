@@ -32,4 +32,8 @@ code {
   margin: auto;
 }
 
+img {
+  object-fit: cover;
+}
 
+@import url("avatar.css");
