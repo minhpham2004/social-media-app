@@ -140,9 +140,9 @@
 }
 .follow_box .close {
   position: absolute;
-  top: 0;
-  right: 3px;
-  font-size: 3rem;
+  top: 0px;
+  right: 7px;
+  font-size: 2rem;
   cursor: pointer;
 }
 

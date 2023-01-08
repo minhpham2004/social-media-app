@@ -5,6 +5,8 @@ import Avatar from '../Avatar'
 import { getProfileUsers } from '../../redux/actions/profileAction'
 import EditProfile from './EditProfile'
 import FollowBtn from '../FollowBtn'
+import Followers from './Followers'
+import Following from './Following'
 
 function Info() {
     const { id } = useParams()
@@ -13,6 +15,9 @@ function Info() {
 
     const [userData, setUserData] = useState([])
     const [onEdit, setOnEdit] = useState(false)
+
+    const [showFollowers, setShowFollowers] = useState(false)
+    const [showFollowing, setShowFollowing] = useState(false)
 
     useEffect(() => {
         if (id === auth.user._id) {
@@ -43,16 +48,16 @@ function Info() {
                                             >
                                                 Edit Profile
                                             </button>
-                                            : <FollowBtn />
+                                            : <FollowBtn user={user} />
                                     }
 
                                 </div>
 
                                 <div className="follow_btn">
-                                    <span className="mr-4">
+                                    <span className="mr-4" onClick={() => setShowFollowers(true)}>
                                         {user.followers.length} Followers
                                     </span>
-                                    <span className="mr-4">
+                                    <span className="mr-4" onClick={() => setShowFollowing(true)}>
                                         {user.following.length} Following
                                     </span>
                                 </div>
@@ -68,6 +73,21 @@ function Info() {
 
                             {
                                 onEdit && <EditProfile user={user} setOnEdit={setOnEdit} />
+                            }
+
+                            {
+                                showFollowers &&
+                                <Followers
+                                    followersUsers={user.followers}
+                                    setShowFollowers={setShowFollowers}
+                                />
+                            }
+                            {
+                                showFollowing &&
+                                <Following
+                                    followingUsers={user.following}
+                                    setShowFollowing={setShowFollowing}
+                                />
                             }
 
                         </div>
