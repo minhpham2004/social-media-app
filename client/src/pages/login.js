@@ -57,7 +57,7 @@ function Login() {
               value={password}
               name='password'
             />
-            <small onClick={() => setTypePass(!typePass)}>
+            <small className='show-pass' onClick={() => setTypePass(!typePass)}>
               {typePass ? "Hide" : "Show"}
             </small>
           </div>

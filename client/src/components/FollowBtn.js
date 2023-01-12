@@ -8,14 +8,24 @@ function FollowBtn({ user }) {
   const { auth, profile } = useSelector(state => state);
   const dispatch = useDispatch();
 
+  const [load, setLoad] = useState(false)
+
   const handleFollow = async () => {
+    if(load) return;
+
     setFollowed(true);
+    setLoad(true)
     await dispatch(follow({ users: profile.users, user, auth }));
+    setLoad(false)
   };
 
   const handleUnFollow = async () => {
+    if(load) return;
+
     setFollowed(false);
+    setLoad(true)
     await dispatch(unfollow({ users: profile.users, user, auth }));
+    setLoad(false)
   };
 
   useEffect(() => {
