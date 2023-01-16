@@ -105,6 +105,7 @@
         width: 100%;
         box-shadow: 0 0 10px #ddd;
         z-index: 2;
+        background: #f8f9fa;
     }
 
     .header .menu .navbar-nav {
