@@ -21,7 +21,6 @@ const postReducer = (state = initialState, action) => {
                 loading: action.payload
             }
         case POST_TYPES.GET_POSTS:
-            console.log(action.payload)
             return {
                 ...state,
                 posts: action.payload.posts,
