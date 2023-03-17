@@ -33,7 +33,7 @@ function CommentCard({ comment, post }) {
     return (
         <div className='comment_card mt-2' style={styleCard}>
             <Link to={`/profile/${comment.user._id}`} className='d-flex text-dark'>
-                <Avatar src={comment.user.avatar} size="small-avatar" />
+                <Avatar src={comment.user.avatar || auth.user.avatar} size="small-avatar" />
                 <h6 className='mx-1'>{comment.user.username}</h6>
             </Link>
 
