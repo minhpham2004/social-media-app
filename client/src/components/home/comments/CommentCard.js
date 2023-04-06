@@ -5,7 +5,7 @@ import Avatar from '../../Avatar'
 import moment from 'moment'
 import LikeButton from '../../LikeButton'
 import CommentMenu from './CommentMenu'
-import { updateComment } from '../../../redux/actions/commentAction'
+import { updateComment, likeComment, unLikeComment } from '../../../redux/actions/commentAction'
 
 function CommentCard({ comment, post }) {
     const { auth } = useSelector(state => state)
@@ -14,24 +14,38 @@ function CommentCard({ comment, post }) {
     const [content, setContent] = useState('')
     const [readMore, setReadMore] = useState(false)
 
-    const [isLike, setIsLike] = useState(false)
     const [onEdit, setOnEdit] = useState(false)
+    const [isLike, setIsLike] = useState(false)
+    const [loadLike, setLoadLike] = useState(false)
 
     useEffect(() => {
         setContent(comment.content)
-    }, [comment])
+        if (comment.likes.find(like => like._id === auth.user._id)) {
+            setIsLike(true)
+        }
+    }, [comment, auth])
 
     const styleCard = {
         opacity: comment._id ? 1 : 0.5,
         pointerEvents: comment._id ? 'inherit' : 'none'
     }
 
-    const handleLike = () => {
+    const handleLike = async () => {
+        if (loadLike) return;
+        setIsLike(true)
 
+        setLoadLike(true)
+        await dispatch(likeComment({ comment, post, auth }))
+        setLoadLike(false)
     }
 
-    const handleUnLike = () => {
+    const handleUnLike = async () => {
+        if (loadLike) return;
+        setIsLike(false)
 
+        setLoadLike(true)
+        await dispatch(unLikeComment({ comment, post, auth }))
+        setLoadLike(false)
     }
 
     const handleUpdate = () => {
@@ -76,7 +90,8 @@ function CommentCard({ comment, post }) {
                         <small className='text-muted mr-3'>
                             {moment(comment.createdAt).fromNow()}
                         </small>
-                        <small className='font-weight-bold mr-3'>
+                        
+                        <small className="font-weight-bold mr-3">
                             {comment.likes.length} likes
                         </small>
                         {
