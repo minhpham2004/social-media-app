@@ -1,6 +1,7 @@
 import { GLOBALTYPES } from "./globalTypes";
 import { POST_TYPES } from "./postAction";
-import { postDataAPI } from "../../utils/fetchData";
+import { postDataAPI, patchDataAPI } from "../../utils/fetchData";
+import { EditData } from "./globalTypes";
 
 export const createComment = (post, newComment, auth) => async (dispatch) => {
     const newPost = { ...post, comments: [...post.comments, newComment] }
@@ -18,4 +19,16 @@ export const createComment = (post, newComment, auth) => async (dispatch) => {
     } catch (err) {
         dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
     }
-}   
+}
+
+export const updateComment = ({ comment, post, content, auth }) => async (dispatch) => {
+    const newComments = EditData(post.comments, comment._id, { ...comment, content })
+    const newPost = { ...post, comments: newComments }
+
+    dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost })
+    try {
+         patchDataAPI(`comment/${comment._id}`, { content }, auth.token)
+    } catch (err) {
+        dispatch({ type: GLOBALTYPES.ALERT, payload: { error: err.response.data.msg } })
+    }
+}
