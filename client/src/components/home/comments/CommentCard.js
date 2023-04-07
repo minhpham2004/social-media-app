@@ -6,8 +6,9 @@ import moment from 'moment'
 import LikeButton from '../../LikeButton'
 import CommentMenu from './CommentMenu'
 import { updateComment, likeComment, unLikeComment } from '../../../redux/actions/commentAction'
+import InputComment from '../InputComment'
 
-function CommentCard({ comment, post }) {
+function CommentCard({ children, comment, post, commentId }) {
     const { auth } = useSelector(state => state)
     const dispatch = useDispatch()
 
@@ -17,6 +18,8 @@ function CommentCard({ comment, post }) {
     const [onEdit, setOnEdit] = useState(false)
     const [isLike, setIsLike] = useState(false)
     const [loadLike, setLoadLike] = useState(false)
+
+    const [onReply, setOnReply] = useState(false)
 
     useEffect(() => {
         setContent(comment.content)
@@ -57,6 +60,11 @@ function CommentCard({ comment, post }) {
         }
     }
 
+    const handleReply = () => {
+        if (onReply) return setOnReply(false)
+        setOnReply({ ...comment, commentId })
+    }
+
     return (
         <div className='comment_card mt-2' style={styleCard}>
             <Link to={`/profile/${comment.user._id}`} className='d-flex text-dark'>
@@ -70,6 +78,12 @@ function CommentCard({ comment, post }) {
                         onEdit
                             ? <textarea rows="5" value={content} onChange={e => setContent(e.target.value)}></textarea>
                             : <div>
+                                {
+                                    comment.tag && comment.tag._id !== comment.user._id &&
+                                    <Link to={`/profile/${comment.tag._id}`} className='mr-1'>
+                                        @{comment.tag.username}
+                                    </Link>
+                                }
                                 <span>
                                     {
                                         content.length < 100 ? content :
@@ -90,7 +104,7 @@ function CommentCard({ comment, post }) {
                         <small className='text-muted mr-3'>
                             {moment(comment.createdAt).fromNow()}
                         </small>
-                        
+
                         <small className="font-weight-bold mr-3">
                             {comment.likes.length} likes
                         </small>
@@ -104,8 +118,8 @@ function CommentCard({ comment, post }) {
                                         cancel
                                     </small>
                                 </>
-                                : <small className='font-weight-bold mr-3'>
-                                    reply
+                                : <small className='font-weight-bold mr-3' style={{ cursor: 'pointer' }} onClick={handleReply}>
+                                    {onReply ? 'cancel' : 'reply'}
                                 </small>
                         }
 
@@ -113,11 +127,23 @@ function CommentCard({ comment, post }) {
                 </div>
 
                 <div className='d-flex align-items-center mx-2' style={{ cursor: 'pointer' }}>
-                    <CommentMenu post={post} comment={comment} auth={auth} setOnEdit={setOnEdit} />
+                    <CommentMenu post={post} comment={comment} setOnEdit={setOnEdit} />
                     <LikeButton isLike={isLike} handleLike={handleLike} handleUnLike={handleUnLike} />
                 </div>
 
             </div>
+
+            {
+                onReply &&
+                <InputComment post={post} onReply={onReply} setOnReply={setOnReply}>
+                    <Link to={`/profile/${onReply.user._id}`} className='mr-1'>
+                        @{onReply.user.username}: 
+                    </Link>
+                </InputComment>
+            }
+
+            {children}
+
         </div>
     )
 }
