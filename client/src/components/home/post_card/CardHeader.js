@@ -10,7 +10,6 @@ function CardHeader({ post }) {
     const dispatch = useDispatch()
 
     const handleEditPost = () => {
-        console.log(post)
         dispatch({ type: GLOBALTYPES.STATUS, payload: { ...post, onEdit: true } })
     }
 

@@ -5,7 +5,7 @@ const initialState = {
     loading: false,
     users: [],
     ids: [],
-    posts: []
+    userPosts: []
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -33,6 +33,16 @@ const profileReducer = (state = initialState, action) => {
                 //     user._id === action.payload._id ? action.payload : user
                 // )
             };
+        case PROFILE_TYPES.GET_ID:
+            return {
+                ...state,
+                ids: [...state.ids, action.payload]
+            }
+        case PROFILE_TYPES.GET_POSTS:
+            return {
+                ...state,
+                userPosts: [...state.userPosts, action.payload]
+            }
         default:
             return state
     }
