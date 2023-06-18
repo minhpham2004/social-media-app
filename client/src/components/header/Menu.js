@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../../redux/actions/authAction'
 import { GLOBALTYPES } from '../../redux/actions/globalTypes'
 import Avatar from '../Avatar'
+import ModalConfirmLogout from './ModalConfirmLogout'
 
 function Menu() {
     const navLinks = [
@@ -17,9 +17,12 @@ function Menu() {
     const dispatch = useDispatch()
     const { pathname } = useLocation()
 
+    const [logoutConfirm, setLogOutConfirm] = useState(false)
+
     const isActive = (pn) => {
         if (pn === pathname) return 'active'
     }
+
 
     return (
         <div className="menu">
@@ -59,13 +62,24 @@ function Menu() {
                         <div className="dropdown-divider"></div>
                         <Link
                             className="dropdown-item" to="/"
-                            onClick={() => dispatch(logout())}
+                            onClick={() => setLogOutConfirm(!logoutConfirm)}
                         >
                             Log Out
                         </Link>
                     </div>
                 </li>
             </ul>
+            <div>
+                {
+                    logoutConfirm &&
+                    <ModalConfirmLogout
+                        isOpen={logoutConfirm}
+                        setLogOutConfirm={setLogOutConfirm}
+                        dispatch={dispatch}
+                    />
+                }
+            </div>
+
         </div>
     )
 }

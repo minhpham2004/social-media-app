@@ -8,7 +8,8 @@ export const PROFILE_TYPES = {
     FOLLOW: "FOLLOW",
     UNFOLLOW: "UNFOLLOW",
     GET_ID: "GET_PROFILE_ID",
-    GET_POSTS: "GET_PROFILE_POSTS"
+    GET_POSTS: "GET_PROFILE_POSTS",
+    UPDATE_POSTS: "UPDATE_PROFILE_POSTS"
 }
 
 export const getProfileUsers = ({ id, auth }) => async (dispatch) => {
