@@ -4,14 +4,18 @@ import { Link } from 'react-router-dom'
 import Send from '../../../images/send.svg'
 import LikeButton from '../../LikeButton'
 import { likePost, unLikePost } from '../../../redux/actions/postAction'
+import ShareModal from '../../ShareModal'
+import { BASE_URL } from '../../../utils/config'
 
 
 function CardFooter({ post }) {
-  const { auth } = useSelector(state => state)
+  const { auth, theme } = useSelector(state => state)
   const dispatch = useDispatch()
 
   const [isLike, setIsLike] = useState(false)
   const [loadLike, setLoadLike] = useState(false)
+
+  const [isShare, setIsShare] = useState(false)
 
   useEffect(() => {
     if (post.likes.find(like => like._id === auth.user._id)) {
@@ -24,7 +28,7 @@ function CardFooter({ post }) {
     if (loadLike) return;
     setIsLike(true)
     setLoadLike(true)
-    
+
     await dispatch(likePost({ post, auth }))
     setLoadLike(false)
   }
@@ -52,7 +56,7 @@ function CardFooter({ post }) {
             <i className='far fa-comment'></i>
           </Link>
 
-          <img src={Send} alt="Send" />
+          <img src={Send} alt="Send" onClick={() => setIsShare(!isShare)} />
         </div>
 
         <i className='far fa-bookmark'></i>
@@ -67,6 +71,12 @@ function CardFooter({ post }) {
           {post.comments.length} comments
         </h6>
       </div>
+
+      {
+        isShare &&
+        <ShareModal url={`${BASE_URL}/post/${post._id}`} theme={theme} />
+      }
+
     </div>
   )
 }

@@ -1,4 +1,5 @@
 const Posts = require('../models/postModel')
+const Comments = require('../models/commentModel')
 
 class APIfeatures {
     constructor(query, queryString) {
@@ -97,9 +98,11 @@ const postCtrl = {
             const post = await Posts.find({ _id: req.params.id, likes: req.user._id })
             if (post.length > 0) return res.status(400).json({ msg: 'You have liked this post' })
 
-            await Posts.findByIdAndUpdate({ _id: req.params.id }, {
+            const like = await Posts.findByIdAndUpdate({ _id: req.params.id }, {
                 $push: { likes: req.user._id }
             }, { new: true })
+
+            if (!like) return res.status(400).json({ msg: 'This post does not exist' })
 
             res.json({ msg: 'Like Post!' })
         } catch (err) {
@@ -109,9 +112,12 @@ const postCtrl = {
 
     unLikePost: async (req, res) => {
         try {
-            await Posts.findByIdAndUpdate({ _id: req.params.id }, {
+            const unlike = await Posts.findByIdAndUpdate({ _id: req.params.id }, {
                 $pull: { likes: req.user._id }
             }, { new: true })
+
+            if (!unlike) return res.status(400).json({ msg: 'This post does not exist' })
+
 
             res.json({ msg: 'UnLike Post!' })
         } catch (err) {
@@ -147,6 +153,8 @@ const postCtrl = {
                     }
                 })
 
+            if (!post) return res.status(400).json({ msg: "This post does not exist" })
+
             res.json({ post })
         } catch (err) {
             return res.status(500).json({ msg: err.message })
@@ -166,6 +174,19 @@ const postCtrl = {
                 result: posts.length,
                 posts
             })
+        } catch (err) {
+            return err.status(500).json({ msg: err.message })
+        }
+    },
+
+    deletePost: async (req, res) => {
+        try {
+            const post = await Posts.findOneAndDelete({ _id: req.params.id, user: req.user._id })
+
+            await Comments.deleteMany({ _id: { $in: post.comments } })
+
+            res.json({ msg: "Delete Post!" })
+
         } catch (err) {
             return err.status(500).json({ msg: err.message })
         }

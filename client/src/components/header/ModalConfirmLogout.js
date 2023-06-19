@@ -14,7 +14,6 @@ function ModalConfirmLogout({ isOpen, setLogOutConfirm, dispatch }) {
     return (
         <Modal
             isOpen={isOpen}
-            toogle={closeModal}
             size="sm"
             className='big-modal'
             centered

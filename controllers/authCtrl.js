@@ -103,11 +103,11 @@ const authCtrl = {
                 if (err) return res.status(400).json({ msg: "Please login now." })
 
                 const user = await Users.findById(result.id).select("-password")
-                .populate('followers following', '-password')
-                
-                if(!user) return res.status(400).json({msg: "This does not exist"})
+                    .populate('followers following', '-password')
 
-                const access_token = createAccessToken({id: result.id})
+                if (!user) return res.status(400).json({ msg: "This does not exist" })
+
+                const access_token = createAccessToken({ id: result.id })
 
                 res.json({
                     access_token,
@@ -120,7 +120,7 @@ const authCtrl = {
     }
 }
 
-const createAccessToken = (payload) => {
+const createAccessToken = (payload) => {    
     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
 }
 

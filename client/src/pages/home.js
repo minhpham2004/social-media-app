@@ -20,7 +20,9 @@ function Home() {
         }
 
       </div>
-      <div className='col-md-4'></div>
+      <div className='col-md-4'>
+        Right Sidebar
+      </div>
     </div>
   )
 }

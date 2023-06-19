@@ -1,13 +1,14 @@
 import { GLOBALTYPES } from './globalTypes'
 import { imageUpload } from '../../utils/imageUpload'
-import { getDataAPI, postDataAPI, patchDataAPI } from '../../utils/fetchData'
+import { getDataAPI, postDataAPI, patchDataAPI, deleteDataAPI } from '../../utils/fetchData'
 
 export const POST_TYPES = {
     CREATE_POST: "CREATE_POST",
     LOADING_POST: "LOADING_POST",
     GET_POSTS: "GET_POSTS",
     UPDATE_POST: "UPDATE_POST",
-    GET_POST: "GET_POST"
+    GET_POST: "GET_POST",
+    DELETE_POST: "DELETE_POST"
 }
 
 export const createPost = ({ content, images, auth }) => async (dispatch) => {
@@ -36,7 +37,7 @@ export const getPosts = (token) => async (dispatch) => {
 
         dispatch({
             type: POST_TYPES.GET_POSTS,
-            payload: {...res.data, page: 2}
+            payload: { ...res.data, page: 2 }
         })
 
         dispatch({ type: POST_TYPES.LOADING_POST, payload: false })
@@ -111,7 +112,7 @@ export const getPost = ({ detailPost, id, auth }) => async (dispatch) => {
     if (detailPost.every(post => post._id !== id)) {
         try {
             const res = await getDataAPI(`post/${id}`, auth.token)
-            
+
             dispatch({ type: POST_TYPES.GET_POST, payload: res.data.post })
         } catch (err) {
             dispatch({
@@ -119,6 +120,19 @@ export const getPost = ({ detailPost, id, auth }) => async (dispatch) => {
                 payload: { error: err.response.data.msg }
             })
         }
+    }
+}
+
+export const deletePost = ({ post, auth }) => async (dispatch) => {
+    dispatch({ type: POST_TYPES.DELETE_POST, payload: post }) 
+
+    try {
+        await deleteDataAPI(`post/${post._id}`, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: { error: err.response.data.msg }
+        })
     }
 }
 
