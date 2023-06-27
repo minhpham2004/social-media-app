@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Send from '../../../images/send.svg'
 import LikeButton from '../../LikeButton'
-import { likePost, unLikePost } from '../../../redux/actions/postAction'
+import { likePost, unLikePost, savePost, unSavePost } from '../../../redux/actions/postAction'
 import ShareModal from '../../ShareModal'
 import { BASE_URL } from '../../../utils/config'
 
@@ -17,12 +17,17 @@ function CardFooter({ post }) {
 
   const [isShare, setIsShare] = useState(false)
 
+  const [saved, setSaved] = useState(false)
+  const [loadSave, setLoadSave] = useState(false)
+
+  //likes
   useEffect(() => {
     if (post.likes.find(like => like._id === auth.user._id)) {
       setIsLike(true)
+    } else {
+      setIsLike(false)
     }
   }, [post.likes, auth.user._id])
-
 
   const handleLike = async () => {
     if (loadLike) return;
@@ -42,6 +47,32 @@ function CardFooter({ post }) {
     setLoadLike(false)
   }
 
+  //save
+  useEffect(() => {
+    if (auth.user.saved.find(id => id === post._id)) {
+      setSaved(true)
+    } else {
+      setSaved(false)
+    }
+  }, [auth.user.saved, post._id])
+
+  const handleSave = async () => {
+    if (loadSave) return;
+    setLoadSave(true)
+
+    await dispatch(savePost({ post, auth }))
+    setLoadSave(false)
+  }
+
+  const handleUnSave = async () => {
+    if (loadSave) return;
+    setLoadSave(true)
+
+    await dispatch(unSavePost({ post, auth }))
+    setLoadSave(false)
+  }
+
+
   return (
     <div className='card_footer'>
       <div className='card_icon_menu'>
@@ -59,7 +90,13 @@ function CardFooter({ post }) {
           <img src={Send} alt="Send" onClick={() => setIsShare(!isShare)} />
         </div>
 
-        <i className='far fa-bookmark'></i>
+        {
+          saved
+            ? <i className='fas fa-bookmark text-warning' onClick={handleUnSave}></i>
+            : <i className='far fa-bookmark' onClick={handleSave}></i>
+        }
+
+
       </div>
 
       <div className='d-flex justify-content-between'>
