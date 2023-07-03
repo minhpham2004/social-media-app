@@ -1,4 +1,4 @@
-let users = []
+let users = [] //real-time socket users
 
 const SocketServer = (socket) => {
     //Connect - Disconnect
