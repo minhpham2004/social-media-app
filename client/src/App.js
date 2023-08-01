@@ -15,9 +15,10 @@ import Alert from './components/alert/Alert';
 import Header from './components/header/Header';
 import StatusModal from './components/StatusModal';
 
+import { GLOBALTYPES } from './redux/actions/globalTypes';
 import { getPosts } from './redux/actions/postAction';
 import { getSuggestions } from './redux/actions/suggestionsAction';
-import { GLOBALTYPES } from './redux/actions/globalTypes';
+import { getNotifies } from './redux/actions/notifyAction';
 
 import io from 'socket.io-client'
 import SocketClient from './SocketClient';
@@ -39,6 +40,7 @@ function App() {
     if (auth.token) {
       dispatch(getPosts(auth.token))
       dispatch(getSuggestions(auth.token))
+      dispatch(getNotifies(auth.token))
     }
   }, [dispatch, auth.token])
 

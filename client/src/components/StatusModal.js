@@ -76,6 +76,14 @@ function StatusModal() {
         setStream(false)
     }
 
+    const handleCloseModal = () => {
+        dispatch({ type: GLOBALTYPES.STATUS, payload: false })
+
+        if(stream) {
+            handleStopStream()
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
         if (images.length === 0)
@@ -105,7 +113,7 @@ function StatusModal() {
             <form onSubmit={handleSubmit}>
                 <div className='status_header'>
                     <h5>Create Post</h5>
-                    <span onClick={() => dispatch({ type: GLOBALTYPES.STATUS, payload: false })}>
+                    <span onClick={handleCloseModal}>
                         &times;
                     </span>
                 </div>
