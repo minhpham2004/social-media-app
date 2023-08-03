@@ -1,13 +1,12 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import NoNotice from '../images/notice.png'
 import Avatar from './Avatar'
 import moment from 'moment'
 
 function NotifyModal() {
-  const { auth, notify } = useSelector(state => state)
-  const dispatch = useDispatch()
+  const { notify } = useSelector(state => state)
 
   return (
     <div style={{ minWidth: '280px' }}>
@@ -62,8 +61,8 @@ function NotifyModal() {
         }
       </div>
 
-      <hr className='my-1'/>
-      <div className='text-right text-danger mr-2' style={{cursor:'pointer'}}>
+      <hr className='my-1' />
+      <div className='text-right text-danger mr-2' style={{ cursor: 'pointer' }}>
         Delete All
       </div>
     </div>
