@@ -56,6 +56,16 @@ const notifyCtrl = {
         }
     },
 
+    deleteNotify: async (req, res) => {
+        try {
+            const notify = await Notifies.deleteOne({ _id: req.params.id, recipients: req.user._id })
+
+            return res.json({ notify })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+
     deleteAllNotifies: async (req, res) => {
         try {
             const notifies = await Notifies.deleteMany({ recipients: req.user._id })
@@ -65,6 +75,8 @@ const notifyCtrl = {
             return res.status(500).json({ msg: err.message })
         }
     },
+
+
 }
 
 module.exports = notifyCtrl

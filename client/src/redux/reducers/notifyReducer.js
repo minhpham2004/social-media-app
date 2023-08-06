@@ -1,5 +1,5 @@
 import { NOTIFY_TYPES } from "../actions/notifyAction";
-import { EditData } from "../actions/globalTypes";
+import { DeleteData, EditData } from "../actions/globalTypes";
 
 const initialState = {
     loading: false,
@@ -35,6 +35,11 @@ const notifyReducer = (state = initialState, action) => {
             return {
                 ...state,
                 sound: action.payload
+            }
+        case NOTIFY_TYPES.DELETE_NOTIFY:
+            return {
+                ...state,
+                data: DeleteData(state.data, action.payload._id)
             }
         case NOTIFY_TYPES.DELETE_ALL_NOTIFIES:
             return {

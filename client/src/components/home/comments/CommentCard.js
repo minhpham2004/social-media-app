@@ -111,10 +111,10 @@ function CommentCard({ children, comment, post, commentId }) {
                         {
                             onEdit
                                 ? <>
-                                    <small className='font-weight-bold mr-3' onClick={handleUpdate}>
+                                    <small className='font-weight-bold mr-3' style={{ cursor: 'pointer' }} onClick={handleUpdate}>
                                         update
                                     </small>
-                                    <small className='font-weight-bold mr-3' onClick={() => setOnEdit(false)}>
+                                    <small className='font-weight-bold mr-3' style={{ cursor: 'pointer' }} onClick={() => setOnEdit(false)}>
                                         cancel
                                     </small>
                                 </>
@@ -137,7 +137,7 @@ function CommentCard({ children, comment, post, commentId }) {
                 onReply &&
                 <InputComment post={post} onReply={onReply} setOnReply={setOnReply}>
                     <Link to={`/profile/${onReply.user._id}`} className='mr-1'>
-                        @{onReply.user.username}: 
+                        @{onReply.user.username}:
                     </Link>
                 </InputComment>
             }
