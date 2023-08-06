@@ -4,7 +4,20 @@ import { GLOBALTYPES } from './redux/actions/globalTypes'
 import { POST_TYPES } from './redux/actions/postAction'
 import { NOTIFY_TYPES } from './redux/actions/notifyAction'
 
-function SocketClient() {
+// const spawnNotification = (body, icon, url, title) => {
+//     let options = {
+//         body, icon
+//     }
+
+//     let n = new Notification(title, options)
+
+//     n.onclick = e => {
+//         e.preventDefault()
+//         window.open(url, ' _blank')
+//     }
+// }
+
+const SocketClient = () => {
     const { auth, socket } = useSelector(state => state)
     const dispatch = useDispatch()
 
@@ -50,7 +63,7 @@ function SocketClient() {
     //Follow
     useEffect(() => {
         socket.on('followToClient', newUser => {
-            dispatch({ type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser} })
+            dispatch({ type: GLOBALTYPES.AUTH, payload: { ...auth, user: newUser } })
         })
 
         return () => socket.off('followToClient')
@@ -58,7 +71,7 @@ function SocketClient() {
 
     useEffect(() => {
         socket.on('unfollowToClient', newUser => {
-            dispatch({ type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser} })
+            dispatch({ type: GLOBALTYPES.AUTH, payload: { ...auth, user: newUser } })
         })
 
         return () => socket.off('unfollowToClient')
@@ -67,7 +80,13 @@ function SocketClient() {
     //Notifications
     useEffect(() => {
         socket.on('createNotifyToClient', msg => {
-            dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg})
+            dispatch({ type: NOTIFY_TYPES.CREATE_NOTIFY, payload: msg })
+            // spawnNotification(
+            //     msg.user.username + ' ' + msg.text,
+            //     msg.user.avatar,
+            //     msg.url,
+            //     'SIUTAGRAM'
+            // )
         })
 
         return () => socket.off('createNotifyToClient')
@@ -75,12 +94,11 @@ function SocketClient() {
 
     useEffect(() => {
         socket.on('removeNotifyToClient', msg => {
-            dispatch({ type: NOTIFY_TYPES.REMOVE_NOTIFY, payload: msg})
+            dispatch({ type: NOTIFY_TYPES.REMOVE_NOTIFY, payload: msg })
         })
 
         return () => socket.off('removeNotifyToClient')
     }, [socket, dispatch])
-
 
 
     return (

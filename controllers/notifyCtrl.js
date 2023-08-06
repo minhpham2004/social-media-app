@@ -42,7 +42,29 @@ const notifyCtrl = {
         } catch (err) {
             return res.status(500).json({ msg: err.message })
         }
-    }
+    },
+
+    isReadNotify: async (req, res) => {
+        try {
+            const notifies = await Notifies.findByIdAndUpdate({ _id: req.params.id }, {
+                isRead: true
+            })
+
+            return res.json({ notifies })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+
+    deleteAllNotifies: async (req, res) => {
+        try {
+            const notifies = await Notifies.deleteMany({ recipients: req.params.id })
+
+            return res.json({ notifies })
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
 }
 
 module.exports = notifyCtrl

@@ -1,12 +1,22 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import NoNotice from '../images/notice.png'
 import Avatar from './Avatar'
 import moment from 'moment'
+import { isReadNotify, NOTIFY_TYPES } from '../redux/actions/notifyAction'
 
 function NotifyModal() {
-  const { notify } = useSelector(state => state)
+  const { auth, notify } = useSelector(state => state)
+  const dispatch = useDispatch()
+
+  const handleIsRead = (msg) => {
+    dispatch(isReadNotify({ msg, auth }))
+  }
+
+  const handleSound = () => {
+    dispatch({ type: NOTIFY_TYPES.UPDATE_SOUND, payload: !notify.sound })
+  }
 
   return (
     <div style={{ minWidth: '280px' }}>
@@ -16,7 +26,9 @@ function NotifyModal() {
           notify.sound
             ? <i
               className='fas fa-bell text-danger'
-              style={{ fontSize: '1.2rem', cursor: 'pointer' }} />
+              style={{ fontSize: '1.2rem', cursor: 'pointer' }}
+              onClick={handleSound}
+            />
             : <i
               className='fas fa-bell-slash text-danger'
               style={{ fontSize: '1.2rem', cursor: 'pointer' }} />
@@ -35,7 +47,11 @@ function NotifyModal() {
           notify.data.map((msg, index) => {
             return (
               <div key={index} className='px-2 mb-3'>
-                <Link to={`${msg.url}`} className='d-flex text-dark align-items-center'>
+                <Link
+                  to={`${msg.url}`}
+                  className='d-flex text-dark align-items-center'
+                  onClick={() => handleIsRead(msg)}
+                >
                   <Avatar src={msg.user.avatar} size="big-avatar" />
 
                   <div className='mx-1 flex-fill'>
