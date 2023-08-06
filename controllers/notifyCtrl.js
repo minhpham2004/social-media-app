@@ -58,7 +58,7 @@ const notifyCtrl = {
 
     deleteAllNotifies: async (req, res) => {
         try {
-            const notifies = await Notifies.deleteMany({ recipients: req.params.id })
+            const notifies = await Notifies.deleteMany({ recipients: req.user._id })
 
             return res.json({ notifies })
         } catch (err) {

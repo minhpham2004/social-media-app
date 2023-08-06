@@ -50,7 +50,7 @@ function App() {
     }
     else if (Notification.permission === "granted") { }
     else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then((permission) => {       
+      Notification.requestPermission().then(function (permission) {
         if (permission === "granted") { }
       });
     }
