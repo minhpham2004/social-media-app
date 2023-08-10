@@ -3,6 +3,7 @@ import '../styles/status_modal.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { GLOBALTYPES } from '../redux/actions/globalTypes'
 import { createPost, updatePost } from '../redux/actions/postAction'
+import Icons from './Icons'
 
 function StatusModal() {
     const { auth, theme, status, socket } = useSelector(state => state)
@@ -25,8 +26,8 @@ function StatusModal() {
         files.forEach(file => {
             if (!file) return err = "File does not exist."
 
-            if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-                return err = "Image format is incorrect"
+            if (file.size > 1024 * 1024 * 5) {
+                return err = "The image largest is 5mb."
             }
 
             return newImages.push(file)
@@ -79,7 +80,7 @@ function StatusModal() {
     const handleCloseModal = () => {
         dispatch({ type: GLOBALTYPES.STATUS, payload: false })
 
-        if(stream) {
+        if (stream) {
             handleStopStream()
         }
     }
@@ -108,6 +109,27 @@ function StatusModal() {
         }
     }, [status])
 
+    const imageShow = (src) => {
+        return (
+            <img
+                src={src}
+                alt='images' className='img-thumbnail'
+                style={{ filter: theme ? 'invert(1)' : 'invert(0)' }}
+            />
+        )
+    }
+
+    const videoShow = (src) => {
+        return (
+            <video
+                controls 
+                src={src}
+                alt='images' className='img-thumbnail'
+                style={{ filter: theme ? 'invert(1)' : 'invert(0)' }}
+            />
+        )
+    }
+
     return (
         <div className='status_modal'>
             <form onSubmit={handleSubmit}>
@@ -126,22 +148,33 @@ function StatusModal() {
                         onChange={e => setContent(e.target.value)}
                     />
 
+                    <div className='d-flex'>
+                        <div className='flex-fill'></div>
+                        <Icons setContent={setContent} content={content} />
+                    </div>
+
                     <div className='show_images'>
                         {
-                            images.map((img, index) => (
-                                <div key={index} id='file_img'>
-                                    <img
-                                        src={
-                                            img.camera
-                                                ? img.camera
-                                                : img.url ? img.url : URL.createObjectURL(img)
-                                        }
-                                        alt='images' className='img-thumbnail'
-                                        style={{ filter: theme ? 'invert(1)' : 'invert(0)' }}
-                                    />
-                                    <span onClick={() => deleteImage(index)}>&times;</span>
-                                </div>
-                            ))
+                            images.map((img, index) => {
+                                return (
+                                    <div key={index} id='file_img'>
+                                        {img.camera
+                                            ? imageShow(img.camera)
+                                            : img.url
+                                                ? <>
+                                                    {img.url.match(/video/i)
+                                                        ? videoShow(img.url)
+                                                        : imageShow(img.url)}
+                                                </>
+                                                : <>
+                                                    {img.type.match(/video/i)
+                                                        ? videoShow(URL.createObjectURL(img))
+                                                        : imageShow(URL.createObjectURL(img))}
+                                                </>}
+                                        <span onClick={() => deleteImage(index)}>&times;</span>
+                                    </div>
+                                )
+                            })
                         }
                     </div>
 
@@ -170,7 +203,8 @@ function StatusModal() {
                                     <div className='file_upload'>
                                         <i className='fas fa-image'></i>
                                         <input
-                                            type="file" name="file" id="file" multiple accept="image/*"
+                                            type="file" name="file" id="file"
+                                            multiple accept="image/*,video/*"
                                             onChange={handleChangeImages}
                                         />
                                     </div>

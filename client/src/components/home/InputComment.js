@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import '../../styles/comments.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { createComment } from '../../redux/actions/commentAction'
+import Icons from '../Icons'
 
 function InputComment({ children, post, onReply, setOnReply }) {
     const [content, setContent] = useState('')
@@ -40,6 +41,8 @@ function InputComment({ children, post, onReply, setOnReply }) {
                 value={content}
                 onChange={e => setContent(e.target.value)}
             />
+
+            <Icons setContent={setContent} content={content} />
 
             <button type="submit" className='postBtn'>
                 Post

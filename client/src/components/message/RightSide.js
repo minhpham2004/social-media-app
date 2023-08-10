@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import UserCard from '../UserCard'
 import MsgDisplay from './MsgDisplay'
 
 function RightSide() {
     const { auth, message } = useSelector(state => state)
-    const dispatch = useDispatch()
 
     const { id } = useParams()
     const [user, setUser] = useState([])

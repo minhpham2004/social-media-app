@@ -22,7 +22,12 @@ export const createPost = ({ content, images, auth, socket }) => async (dispatch
 
         dispatch({ type: POST_TYPES.CREATE_POST, payload: res.data.newPost })
 
-        dispatch(getPosts(auth.token))
+        const getPostRes = await getDataAPI('posts', auth.token)
+
+        dispatch({
+            type: POST_TYPES.GET_POSTS,
+            payload: { ...getPostRes.data, page: 2 }
+        })
 
         dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: false } })
 
