@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/icons.css'
 
-function Icons({setContent, content}) {
+function Icons({ setContent, content }) {
     const reactions = [
         '❤️', '😆', '😯', '😢', '😡', '👍', '👎', '😄',
         '😂', '😍', '😘', '😗', '😚', '😳', '😭', '😓',

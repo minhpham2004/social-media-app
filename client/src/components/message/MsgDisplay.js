@@ -1,7 +1,8 @@
 import React from 'react'
 import Avatar from '../Avatar'
+import { imageShow, videoShow } from '../../utils/mediaShow'
 
-function MsgDisplay({ user }) {
+function MsgDisplay({ user, msg, theme }) {
     return (
         <>
             <div className='chat_title'>
@@ -9,12 +10,24 @@ function MsgDisplay({ user }) {
                 <span className='pl-1'>{user.username}</span>
             </div>
 
-            <div className='chat_text'>
-                fdsaaaaaaaaaaaa fdsafsafffff sdfsdfdsf dsfsd fsdf dsfsd fdsfd sfds fsdfsdfds sdf sdf dssdfsdfsdfsdfsdfdddddddddddddddddddddddddddddddddddd
-            </div>
+            {
+                msg.text && <div className='chat_text'>{msg.text}</div>
+            }
+
+            {
+                msg.media.map((item, index) => (
+                    <div key={index}>
+                        {
+                            item.url.match(/video/i)
+                                ? videoShow(item.url, theme)
+                                : imageShow(item.url, theme)
+                        }
+                    </div>
+                ))
+            }
 
             <div className='chat_time'>
-                July 2023
+                {new Date(msg.createdAt).toLocaleString()}
             </div>
         </>
     )
