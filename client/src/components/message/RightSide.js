@@ -5,7 +5,7 @@ import UserCard from '../UserCard'
 import MsgDisplay from './MsgDisplay'
 import Icons from '../Icons'
 import { GLOBALTYPES } from '../../redux/actions/globalTypes'
-import { addMessage } from '../../redux/actions/messageAction'
+import { addMessage, getMessages } from '../../redux/actions/messageAction'
 import { imageShow, videoShow } from '../../utils/mediaShow'
 import { imageUpload } from '../../utils/imageUpload'
 import LoadIcon from '../../images/loading.gif'
@@ -74,6 +74,17 @@ function RightSide() {
         setLoadMedia(false)
         dispatch(addMessage({ msg, auth, socket }))
     }
+
+    useEffect(() => {
+        if (message.firstLoad) return;
+        if (id) {
+            const getMessagesData = async () => {
+                const res = await dispatch(getMessages({ auth, id }))
+            }
+
+            getMessagesData()
+        }
+    })
 
     return (
         <>

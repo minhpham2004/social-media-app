@@ -28,6 +28,7 @@ app.use('/api', require('./routes/userRouter'))
 app.use('/api', require('./routes/postRouter'))
 app.use('/api', require('./routes/commentRouter'))
 app.use('/api', require('./routes/notifyRouter'))
+app.use('/api', require('./routes/messageRouter'))
 
 app.get('/', (req, res) => {
     res.send('Hello Social Media Server')
@@ -39,7 +40,7 @@ mongoose.connect(URI, {
     useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
-}, err => {
+}, err => { 
     if (err) throw err;
     console.log('Connected to mongodb')
 })
