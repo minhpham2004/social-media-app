@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import UserCard from '../UserCard'
@@ -19,6 +19,11 @@ function RightSide() {
     const [text, setText] = useState('')
     const [media, setMedia] = useState([])
     const [loadMedia, setLoadMedia] = useState(false)
+
+    const refDisplay = useRef()
+    const pageEnd = useRef()
+
+    const [page, setPage] = useState(0)
 
     useEffect(() => {
         const newUser = message.users.find(user => user._id === id)
@@ -76,15 +81,43 @@ function RightSide() {
     }
 
     useEffect(() => {
-        if (message.firstLoad) return;
-        if (id) {
-            const getMessagesData = async () => {
-                const res = await dispatch(getMessages({ auth, id }))
-            }
+        dispatch(getMessages({ auth, id }))
+    }, [id, dispatch, auth])
 
-            getMessagesData()
+
+    useEffect(() => {
+        if (message.data.every(item => item._id !== id)) {
+            setTimeout(() => {
+                refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+            }, 50)
         }
-    })
+    }, [id, dispatch, auth, message.data])
+
+    useEffect(() => {
+        if (refDisplay.current) {
+            refDisplay.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        }
+    }, [text])
+
+    //Load More
+    useEffect(() => {
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) {
+                setPage(p => p + 1)
+            }
+        }, {
+            threshold: 0.1
+        })
+
+        observer.observe(pageEnd.current)
+    }, [setPage])
+
+    useEffect(() => {
+        if (message.resultData >= (page - 1) * 9 && page > 1) {
+            dispatch(getMessages({ auth, id, page }))
+        }
+    }, [message.resultData, page, id, auth, dispatch])
+  
 
     return (
         <>
@@ -101,7 +134,8 @@ function RightSide() {
                 className='chat_container'
                 style={{ height: media.length > 0 ? 'calc(100% - 180px)' : '' }}
             >
-                <div className='chat_display'>
+                <div className='chat_display' ref={refDisplay}>
+                    <button style={{ marginTop: '-25px' }} ref={pageEnd}>Load More</button>
                     {
                         message.data.map((msg, index) => (
                             <div key={index}>

@@ -9,6 +9,7 @@ const initialState = {
 }
 
 const messageReducer = (state = initialState, action) => {
+    console.log(state.data)
     switch (action.type) {
         case MESS_TYPES.ADD_USER:
             return {
@@ -35,7 +36,7 @@ const messageReducer = (state = initialState, action) => {
         case MESS_TYPES.GET_MESSAGES:
             return {
                 ...state,
-                data: action.payload.messages.reverse(),
+                data: action.payload.messages,
                 resultUsers: action.payload.result
             }
         default:
